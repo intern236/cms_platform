@@ -1,0 +1,82 @@
+/**
+ * Known cross-site-scripting payloads, drawn from the OWASP filter-evasion cheat
+ * sheet, PortSwigger's XSS cheat sheet and published sanitiser bypasses (mXSS,
+ * comment and foreign-content tricks). Every one of these must come out of BOTH
+ * sanitisers unable to run script.
+ */
+export const XSS_VECTORS: string[] = [
+  // Plain script and event handlers
+  `<script>alert(1)</script>`,
+  `<SCRIPT SRC=https://evil.example/x.js></SCRIPT>`,
+  `<img src=x onerror=alert(1)>`,
+  `<img src=x ONERROR=alert(1)>`,
+  `<img src=x onerror="alert(1)"//`,
+  `<body onload=alert(1)>`,
+  `<svg onload=alert(1)>`,
+  `<svg/onload=alert(1)>`,
+  `<details open ontoggle=alert(1)>`,
+  `<input autofocus onfocus=alert(1)>`,
+  `<input type="image" src="x" onerror="alert(1)">`,
+  `<video><source onerror=alert(1)></video>`,
+  `<audio src=x onerror=alert(1)>`,
+  `<marquee onstart=alert(1)>`,
+  `<div onpointerover=alert(1)>x</div>`,
+  // URL schemes
+  `<a href="javascript:alert(1)">x</a>`,
+  `<a href="JaVaScRiPt:alert(1)">x</a>`,
+  `<a href=" javascript:alert(1)">x</a>`,
+  `<a href="jav&#x09;ascript:alert(1)">x</a>`,
+  `<a href="&#106;avascript:alert(1)">x</a>`,
+  `<a href="&#x6A;avascript&#x3A;alert(1)">x</a>`,
+  `<a href="vbscript:msgbox(1)">x</a>`,
+  `<a href="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==">x</a>`,
+  `<iframe src="javascript:alert(1)"></iframe>`,
+  `<iframe src="data:text/html,<script>alert(1)</script>"></iframe>`,
+  `<iframe srcdoc="<script>alert(1)</script>"></iframe>`,
+  `<form action="javascript:alert(1)"><button>x</button></form>`,
+  `<button formaction="javascript:alert(1)">x</button>`,
+  `<video poster="javascript:alert(1)"></video>`,
+  `<area href="javascript:alert(1)">`,
+  `<object data="javascript:alert(1)"></object>`,
+  `<embed src="javascript:alert(1)">`,
+  `<base href="javascript:alert(1)//">`,
+  `<meta http-equiv="refresh" content="0;url=javascript:alert(1)">`,
+  // SVG
+  `<svg><a xlink:href="javascript:alert(1)"><text>x</text></a></svg>`,
+  `<svg><a href="javascript:alert(1)"><text>x</text></a></svg>`,
+  `<svg><animate onbegin=alert(1) attributeName=x dur=1s>`,
+  `<svg><set attributeName="href" to="javascript:alert(1)"/></svg>`,
+  `<svg><a><animate attributeName="href" values="javascript:alert(1)"/><text>x</text></a></svg>`,
+  `<svg><use href="data:image/svg+xml;base64,PHN2Zz48c2NyaXB0PmFsZXJ0KDEpPC9zY3JpcHQ+PC9zdmc+#x"/></svg>`,
+  `<svg><script>alert(1)</script></svg>`,
+  `<svg><foreignObject><img src=x onerror=alert(1)></foreignObject></svg>`,
+  `<svg><foreignObject><iframe srcdoc="<script>alert(1)</script>"></iframe></foreignObject></svg>`,
+  // Raw-text and foreign-content mutation XSS
+  `<svg><style><img src=x onerror=alert(1)></style></svg>`,
+  `<svg></p><style><a id="</style><img src=1 onerror=alert(1)>">`,
+  `<math><mtext><table><mglyph><style><img src=x onerror=alert(1)>`,
+  `<math><mtext><table><mglyph><style><!--</style><img title="--&gt;&lt;/mglyph&gt;&lt;img&Tab;src=1&Tab;onerror=alert(1)&gt;">`,
+  `<noscript><p title="</noscript><img src=x onerror=alert(1)>"></p></noscript>`,
+  `<style><img src=x onerror=alert(1)></style>`,
+  `<textarea></textarea><img src=x onerror=alert(1)></textarea>`,
+  `<title></title><img src=x onerror=alert(1)></title>`,
+  `<table><style><img src=x onerror=alert(1)></style></table>`,
+  `<svg><desc><style><img src=x onerror=alert(1)></style></desc></svg>`,
+  // Comments
+  `<!--><img src=x onerror=alert(1)>-->`,
+  `<!---><img src=x onerror=alert(1)>-->`,
+  `<!-- --!><img src=x onerror=alert(1)>-->`,
+  `<!-- a -- b --><img src=x onerror=alert(1)>`,
+  `<!--<img src="--><img src=x onerror=alert(1)//">`,
+  // Script-type confusion
+  `<script type="application/ld+json">{"a":1}</script><script type=text/javascript>alert(1)</script>`,
+  `<script type="application/ld+json">{"a":"</script><script>alert(1)</script>"}</script>`,
+  `<script type="module">alert(1)</script>`,
+  // CSS
+  `<div style="background:url(javascript:alert(1))">x</div>`,
+  `<div style="width:expression(alert(1))">x</div>`,
+  // Misc
+  `<link rel=import href="https://evil.example/x.html">`,
+  `<isindex action=javascript:alert(1) type=image>`,
+  `<a href="https://ok.example" onclick="alert(1)">ok</a>`,
+]

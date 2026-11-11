@@ -1,0 +1,27 @@
+{
+  "name": "@cms/site-kit",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./next": "./src/next/index.ts",
+    "./ui": "./src/ui/index.ts",
+    "./styles.css": "./src/styles.css"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "next": ">=16",
+    "react": ">=19"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@types/react": "^19",
+    "next": "16.4.3",
+    "react": "19.2.8",
+    "typescript": "^5"
+  }
+}

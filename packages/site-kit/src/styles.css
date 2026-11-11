@@ -1,0 +1,21 @@
+/*
+ * Minimal styles the site kit's output relies on. Import once in your global CSS:
+ *   @import '@cms/site-kit/styles.css';
+ */
+
+/* Wide tables scroll sideways on small screens instead of breaking the layout. */
+.cms-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* HTML-page posts start from a clean slate so the site's own styles don't leak in. */
+[data-html-post] {
+  display: block;
+  isolation: isolate;
+}
+[data-html-post] img,
+[data-html-post] video,
+[data-html-post] iframe {
+  max-width: 100%;
+}

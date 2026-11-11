@@ -1,0 +1,25 @@
+{
+  "name": "cms-platform",
+  "private": true,
+  "engines": {
+    "node": ">=22.13"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @cms/app",
+    "dev:site": "npm run dev -w acme-site --if-present",
+    "build": "npm run build -w @cms/app",
+    "build:site": "npm run build -w acme-site --if-present",
+    "start": "npm run start -w @cms/app",
+    "setup": "npm run setup -w @cms/app",
+    "db:migrate": "npm run db:migrate -w @cms/app",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test -w @cms/app",
+    "test:e2e": "node scripts/test-e2e.mjs"
+  }
+}

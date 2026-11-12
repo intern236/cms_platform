@@ -94,7 +94,7 @@ export function PeoplePanel({
           <AnimatePresence>
             {link && (
               <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="rounded-2xl bg-warn-soft p-4 text-[13px] text-warn">
-                <p className="font-medium">Email is not set up on this server, so send this link yourself. It works once, for 7 days.</p>
+                <p className="font-medium">Direct invite link (valid for 7 days). You can copy and share this link directly with the client:</p>
                 <div className="mt-2 flex items-center gap-2">
                   <code className="min-w-0 flex-1 truncate rounded-lg bg-surface px-2 py-1.5 font-mono text-[12px] text-ink">{link}</code>
                   <Button size="xs" variant="ink" type="button" onClick={() => (navigator.clipboard.writeText(link), toast.success('Copied'))}>

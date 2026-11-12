@@ -25,7 +25,7 @@ export function mailConfigured(): boolean {
 export function mailFrom(): { name: string; address: string } {
   return {
     name: process.env.MAIL_FROM_NAME?.trim() || agencyName(),
-    address: process.env.MAIL_FROM?.trim() || 'no-reply@localhost',
+    address: process.env.MAIL_FROM?.trim() || process.env.SMTP_USER?.trim() || 'no-reply@localhost',
   }
 }
 

@@ -238,10 +238,17 @@ export async function inviteMember(workspace: string, input: { email: unknown; r
   if (!result.ok) return { ok: false, errors: { email: result.error } }
   await log(gate.access, 'member.invited', `invited ${String(input.email).trim().toLowerCase()} as ${ROLE_LABEL[role].toLowerCase()}`)
   refresh(gate.access.workspace.slug)
+  let message = 'Invite sent.'
+  if (result.mail.outbox) {
+    message = 'Invite created. Email is not set up, so copy the link below.'
+  } else if (!result.mail.sent) {
+    message = `Invite created, but email could not be sent (${result.mail.error || 'SMTP delivery failed'}). Copy the link below:`
+  }
+
   return {
     ok: true,
-    message: result.mail.outbox ? 'Invite created. Email is not set up, so copy the link below.' : 'Invite sent.',
-    url: result.mail.outbox ? result.url : undefined,
+    message,
+    url: result.url,
   }
 }
 

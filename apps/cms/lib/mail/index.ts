@@ -55,8 +55,10 @@ export async function sendMail(input: { to: Address; replyTo?: Address; fromName
     })
     return { sent: true }
   } catch (error) {
-    console.error('[mail] send failed:', error instanceof Error ? error.message : error)
-    return { sent: false, error: 'send failed' }
+    g.__cmsMailer = undefined
+    const errMsg = error instanceof Error ? error.message : String(error)
+    console.error('[mail] send failed:', errMsg)
+    return { sent: false, error: errMsg }
   }
 }
 

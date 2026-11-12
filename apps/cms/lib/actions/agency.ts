@@ -47,7 +47,7 @@ export async function createClient(input: {
       inviter: { id: user.id, name: user.name },
     })
     if (!invite.ok) return { ok: true, slug: created.workspace.slug, message: `Client created, but the invite failed: ${invite.error}` }
-    if (invite.mail.outbox) url = invite.url
+    url = invite.url
   }
   revalidatePath('/agency')
   return { ok: true, slug: created.workspace.slug, url, message: 'Client created.' }
@@ -74,10 +74,17 @@ export async function inviteAgencyMember(email: unknown): Promise<Result> {
   })
   if (!invite.ok) return { ok: false, errors: { email: invite.error } }
   revalidatePath('/agency/team')
+  let message = 'Invite sent.'
+  if (invite.mail.outbox) {
+    message = 'Invite created. Email is not set up, so copy the link below.'
+  } else if (!invite.mail.sent) {
+    message = `Invite created, but email could not be sent (${invite.mail.error || 'SMTP delivery failed'}). Copy the link below:`
+  }
+
   return {
     ok: true,
-    message: invite.mail.outbox ? 'Invite created. Email is not set up, so copy the link below.' : 'Invite sent.',
-    url: invite.mail.outbox ? invite.url : undefined,
+    message,
+    url: invite.url,
   }
 }
 

@@ -16,6 +16,7 @@
     "build:site": "npm run build -w acme-site --if-present",
     "start": "npm run start -w @cms/app",
     "setup": "npm run setup -w @cms/app",
+    "invite": "npm run invite -w @cms/app --",
     "db:migrate": "npm run db:migrate -w @cms/app",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",

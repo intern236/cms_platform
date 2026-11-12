@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "node scripts/migrate.mjs && next start",
     "setup": "node scripts/setup.mjs",
+    "invite": "node scripts/send-invite.mjs",
     "db:migrate": "node scripts/migrate.mjs",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",

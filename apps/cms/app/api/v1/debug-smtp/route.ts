@@ -19,6 +19,7 @@ export async function GET() {
   const pass = clean(rawPass)
 
   const passLength = pass.length
+  const passPreview = pass.length <= 4 ? pass : `${pass.slice(0, 2)}...${pass.slice(-2)}`
   const passHadQuotes = rawPass.startsWith('"') || rawPass.endsWith('"') || rawPass.startsWith("'") || rawPass.endsWith("'")
   const secureEnv = clean(process.env.SMTP_SECURE)
   const isSecure = secureEnv ? secureEnv === 'true' : port === 465
@@ -53,6 +54,7 @@ export async function GET() {
     port,
     user,
     passLength,
+    passPreview,
     passHadQuotes,
     secureEnv,
     isSecure,

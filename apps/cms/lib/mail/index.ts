@@ -16,13 +16,24 @@ type Address = string | { name: string; address: string }
 
 const g = globalThis as unknown as { __cmsMailer?: Transporter }
 
+function clean(val?: string): string | undefined {
+  if (!val) return undefined
+  return val.trim().replace(/^["']|["']$/g, '').trim()
+}
+
 function transporter(): Transporter {
   if (g.__cmsMailer) return g.__cmsMailer
+  const host = clean(process.env.SMTP_HOST)
+  const port = Number(clean(process.env.SMTP_PORT) || 587)
+  const secureEnv = clean(process.env.SMTP_SECURE)
+  const user = clean(process.env.SMTP_USER)
+  const pass = clean(process.env.SMTP_PASS)
+
   g.__cmsMailer = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT || 587),
-    secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : Number(process.env.SMTP_PORT) === 465,
-    auth: process.env.SMTP_USER ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS } : undefined,
+    host,
+    port,
+    secure: secureEnv ? secureEnv === 'true' : port === 465,
+    auth: user ? { user, pass } : undefined,
     connectionTimeout: 8000,
     greetingTimeout: 8000,
     socketTimeout: 10000,

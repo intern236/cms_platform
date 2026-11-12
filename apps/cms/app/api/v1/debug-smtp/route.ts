@@ -2,27 +2,38 @@ import { NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
 import { mailFrom } from '@/lib/env'
 
+function clean(val?: string | null): string {
+  if (!val) return ''
+  return val.trim().replace(/^["']|["']$/g, '').trim()
+}
+
 export async function GET() {
-  const host = process.env.SMTP_HOST || null
-  const port = process.env.SMTP_PORT || '587'
-  const user = process.env.SMTP_USER || null
+  const rawHost = process.env.SMTP_HOST || null
+  const rawPort = process.env.SMTP_PORT || '587'
+  const rawUser = process.env.SMTP_USER || null
   const rawPass = process.env.SMTP_PASS || ''
-  const passLength = rawPass.length
-  const passHasQuotes = rawPass.startsWith('"') || rawPass.endsWith('"') || rawPass.startsWith("'") || rawPass.endsWith("'")
-  const secureEnv = process.env.SMTP_SECURE || null
-  const isSecure = secureEnv ? secureEnv === 'true' : Number(port) === 465
+
+  const host = clean(rawHost)
+  const port = Number(clean(rawPort) || 587)
+  const user = clean(rawUser)
+  const pass = clean(rawPass)
+
+  const passLength = pass.length
+  const passHadQuotes = rawPass.startsWith('"') || rawPass.endsWith('"') || rawPass.startsWith("'") || rawPass.endsWith("'")
+  const secureEnv = clean(process.env.SMTP_SECURE)
+  const isSecure = secureEnv ? secureEnv === 'true' : port === 465
   const from = mailFrom()
 
   let verifyStatus = 'unknown'
   let verifyError: string | null = null
 
-  if (host && user && rawPass) {
+  if (host && user && pass) {
     try {
       const transporter = nodemailer.createTransport({
         host,
-        port: Number(port),
+        port,
         secure: isSecure,
-        auth: { user, pass: rawPass },
+        auth: { user, pass },
         connectionTimeout: 8000,
         greetingTimeout: 8000,
         socketTimeout: 8000,
@@ -42,7 +53,7 @@ export async function GET() {
     port,
     user,
     passLength,
-    passHasQuotes,
+    passHadQuotes,
     secureEnv,
     isSecure,
     from,

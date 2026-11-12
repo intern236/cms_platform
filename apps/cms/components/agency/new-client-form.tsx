@@ -45,7 +45,11 @@ export function NewClientForm({ cmsHost }: { cmsHost: string }) {
       setErrors(r.errors ?? { form: r.error ?? 'Could not create the client.' })
       return
     }
-    toast.success(`${name} is ready`, { description: r.message })
+    if (r.message && r.message.includes('could not be sent')) {
+      toast.warning(`${name} is ready`, { description: r.message })
+    } else {
+      toast.success(`${name} is ready`, { description: r.message })
+    }
     if (r.url) setLink({ url: r.url, slug: r.slug! })
     else router.push(`/${r.slug}/settings?tab=website`)
   }

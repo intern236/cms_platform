@@ -38,6 +38,7 @@ export async function createClient(input: {
   })
   if (!created.ok) return { ok: false, errors: created.errors }
   let url: string | undefined
+  let message = 'Client created.'
   const ownerEmail = str(input.ownerEmail).trim()
   if (ownerEmail) {
     const invite = await createInvite({
@@ -48,9 +49,16 @@ export async function createClient(input: {
     })
     if (!invite.ok) return { ok: true, slug: created.workspace.slug, message: `Client created, but the invite failed: ${invite.error}` }
     url = invite.url
+    if (invite.mail.sent) {
+      message = 'Client created and invitation email sent to owner.'
+    } else if (invite.mail.outbox) {
+      message = 'Client created. Email is not set up, so copy the link below.'
+    } else {
+      message = `Client created, but email could not be sent (${invite.mail.error || 'SMTP delivery failed'}). Copy the link below:`
+    }
   }
   revalidatePath('/agency')
-  return { ok: true, slug: created.workspace.slug, url, message: 'Client created.' }
+  return { ok: true, slug: created.workspace.slug, url, message }
 }
 
 export async function archiveClient(slug: unknown, archived: boolean): Promise<Result> {
